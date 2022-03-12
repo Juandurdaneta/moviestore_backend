@@ -41,7 +41,7 @@ router.get('/', (req, res)=>{
             });
         } else {
             res.send({
-                status: 100,
+                status: 500,
                 message: "An error has occurred. Please try again."
             })
         }
@@ -65,7 +65,7 @@ router.get('/:movieId', (req, res)=>{
             });
         } else if(!movieFound[0]){
             res.send({
-                status: 100,
+                status: 400,
                 message: `No movie has been found with the id ${movieId}`
             })
         } else if(err){
@@ -74,5 +74,51 @@ router.get('/:movieId', (req, res)=>{
     })
 
 })
+
+// EDIT A MOVIE
+
+router.put('/:movieId', (req, res)=>{
+
+    Movie.findOneAndUpdate({movieId: req.params.movieId}, req.body, (err, movieFound)=>{
+        if(!err && movieFound){
+            res.send({ 
+                status: 200, 
+                mensaje: 'Movie Updated succesfully'
+            }); 
+        } else{
+            res.send({
+                status: 500,
+                mensaje: 'An error has occurred. Please try again.'
+            })
+        }
+    })
+
+})
+
+// DELETE MOVIE
+
+app.delete('/:movieId', (req,res)=>{
+
+    try{
+        Movie.findOneAndDelete({movieId: req.params.movieId}, (err, movieDeleted)=>{
+            if(!err){
+                res.send({ 
+                    status: 200, 
+                    mensaje: 'Movie deleted succesfully'
+                });
+            } else {
+                res.send({ 
+                    status: 500, 
+                    mensaje: "An error has occurred. Please try again."
+                });
+            }
+        });
+       
+    } catch(err){
+        res.send(err);
+    }
+    
+});
+
 
 module.exports = router;
