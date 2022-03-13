@@ -4,8 +4,17 @@ const movieSchema = require('./models.js')
 
 const Movie = movieSchema.getMovie();
 
+router.use((req, res, next)=>{
+    // Website you wish to allow to connect
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8100');
 
-// POST METHOND
+    // Request methods you wish to allow
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
+    next();
+})
+
+// POST METHOD
 
 router.post('/', (req, res)=>{
 
@@ -34,9 +43,6 @@ router.post('/', (req, res)=>{
 
 router.get('/', (req, res)=>{
 
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8100');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
-
     Movie.find({}, (err, moviesFound) =>{ 
         if(!err){
             res.send({ 
@@ -58,9 +64,6 @@ router.get('/', (req, res)=>{
 // GET SPECIFIC MOVIE
 
 router.get('/:movieId', (req, res)=>{
-
-    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8100');
-    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
 
     const movieId = req.params.movieId
 
