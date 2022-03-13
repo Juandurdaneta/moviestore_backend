@@ -9,6 +9,7 @@ const Movie = movieSchema.getMovie();
 
 router.post('/', (req, res)=>{
 
+    
     const newMovie = new Movie(
         req.body
     )
@@ -33,6 +34,9 @@ router.post('/', (req, res)=>{
 
 router.get('/', (req, res)=>{
 
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8100');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+
     Movie.find({}, (err, moviesFound) =>{ 
         if(!err){
             res.send({ 
@@ -54,6 +58,9 @@ router.get('/', (req, res)=>{
 // GET SPECIFIC MOVIE
 
 router.get('/:movieId', (req, res)=>{
+
+    res.setHeader('Access-Control-Allow-Origin', 'http://localhost:8100');
+    res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
 
     const movieId = req.params.movieId
 
@@ -97,7 +104,7 @@ router.put('/:movieId', (req, res)=>{
 
 // DELETE MOVIE
 
-app.delete('/:movieId', (req,res)=>{
+router.delete('/:movieId', (req,res)=>{
 
     try{
         Movie.findOneAndDelete({movieId: req.params.movieId}, (err, movieDeleted)=>{

@@ -11,8 +11,8 @@ const movieSchema = new mongoose.Schema({
         type: String,
         required: true
       },
-    genre: {
-        type: String,
+    genres: {
+        type: Array,
         required: true
     },
     poster : {
@@ -21,13 +21,13 @@ const movieSchema = new mongoose.Schema({
     background : {
         type: String
     },
-    rating : {
-        type: Number,
-        default: 10
-    },
     trailer : {
         type: String
+    },
+    director : {
+        type: String
     }
+
 })
 
 
