@@ -85,6 +85,37 @@ router.get('/:movieId', (req, res)=>{
 
 })
 
+// GET ALL MOVIES FROM A SPECIFIC GENRE
+
+router.get('/genre/:genre', (req, res)=>{
+    const genre =  capitalizeFirstLetter(req.params.genre)
+
+
+    Movie.find({}, (err, moviesFound) =>{ 
+        if(!err){
+            
+           const moviesBySelectedGenre = moviesFound.filter((movie)=>{
+                return movie.genres.includes(genre) && movie 
+            })
+
+
+            res.send({
+                "status": 200,
+                "foundMovies": moviesBySelectedGenre
+            })
+        } else {
+           
+            res.send({
+                status: 400,
+                message: `No movie has been found with the genre ${genre}`
+            })
+     }
+
+
+})
+}
+)
+
 // EDIT A MOVIE
 
 router.put('/:movieId', (req, res)=>{
@@ -130,5 +161,8 @@ router.delete('/:movieId', (req,res)=>{
     
 });
 
+function capitalizeFirstLetter(string) {
+    return string[0].toUpperCase() + string.slice(1);
+}
 
 module.exports = router;
