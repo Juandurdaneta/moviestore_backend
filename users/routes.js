@@ -1,4 +1,6 @@
 const express = require('express');
+const bcrypt = require('bcrypt');
+const saltRounds = 10
 const router = express.Router();
 const userSchema = require('./models.js')
 
@@ -18,13 +20,12 @@ router.use((req, res, next)=>{
 
 router.post('/register', (req, res)=>{
 
-    // TODO: Add hashing w bcrypt
     const { username, email, password } = req.body; 
 
     const newUser = new User({
         username: username,
         email: email,
-        password: password
+        password: bcrypt.hashSync(password, saltRounds) // Hashing 
     });
 
     newUser.save((err)=>{
@@ -52,7 +53,7 @@ router.post('/login', (req, res)=>{
 
     User.findOne({email: email}, (err, foundUser) =>{
         if(!err) {
-            if(foundUser && foundUser.password == password) {
+            if(foundUser && bcrypt.compare(password, foundUser.password)) {
                 res.send({
                     status: 200,
                     user: foundUser
