@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const port = 4000
 const app = express();
+const usersRoutes = require('./users/routes')
 const movieRoutes = require('./movies/routes')
 
 // body-parser configuration
@@ -15,6 +16,7 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 mongoose.connect("mongodb://localhost:27017/moviestore", { useUnifiedTopology: true, useNewUrlParser: true });
 
 app.use('/movies', movieRoutes);
+app.use('/users', usersRoutes)
 
 
 app.listen(port, ()=>{
