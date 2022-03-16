@@ -1,10 +1,21 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
+const bodyParser = require('body-parser')
 const saltRounds = 10
 const router = express.Router();
 const userSchema = require('./models.js')
-
+const multer = require('multer');
+const upload = multer();
 const User = userSchema.getUser();
+
+
+// body-parser configuration
+router.use( bodyParser.json() );       // to support JSON-encoded bodies
+router.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+    extended: true
+}));
+
+
 
 router.use((req, res, next)=>{
     // Website you wish to allow to connect
@@ -48,7 +59,8 @@ router.post('/register', (req, res)=>{
 
 // Log in user
 
-router.post('/login', (req, res)=>{
+router.post('/login', upload.none(), (req, res)=>{
+
     const {email, password} = req.body;
 
     User.findOne({email: email}, (err, foundUser) =>{
@@ -71,6 +83,7 @@ router.post('/login', (req, res)=>{
             })
         }
     })
+
 })
 
 module.exports = router;
