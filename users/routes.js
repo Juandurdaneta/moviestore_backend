@@ -38,7 +38,6 @@ router.use((req, res, next)=>{
 router.post('/register', upload.none(), (req, res)=>{
 
     const { username, email, password } = req.body; 
-    console.log(req.body)
     const newUser = new User({
         username: username,
         email: email,
@@ -113,6 +112,33 @@ router.get('/', (req, res)=>{
 
     res.send(user)
   
+})
+
+// Delete user
+
+router.delete('/', (req, res) =>{
+    const user = utils.getUser(req.headers.authorization.split(" ")[1]);
+
+    User.findOneAndDelete({userId: user.userId}, (err, deletedUser)=>{
+        if(!err){
+            res.send({
+                status: 200,
+                message: 'User deleted succesfully'
+            })
+        } else {
+            res.send({
+                status: 400,
+                message: 'An error has occurred, please try again.'
+            })
+        }
+    })
+
+})
+
+// Update user
+
+router.put('/', (req,res)=>{
+
 })
 
 module.exports = router;
