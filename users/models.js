@@ -16,6 +16,11 @@ const userSchema = new mongoose.Schema({
     password: {
         type: String,
         required: true
+    },
+    profileImage : {
+        type: String,
+        required: true,
+        default: 'https://avatars.dicebear.com/api/bottts/default.svg'
     }
 })
 

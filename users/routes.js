@@ -1,12 +1,15 @@
 const express = require('express');
-const bcrypt = require('bcrypt');
 const bodyParser = require('body-parser')
-const saltRounds = 10
 const router = express.Router();
 const userSchema = require('./models.js')
-const multer = require('multer');
-const upload = multer();
 const User = userSchema.getUser();
+const jwt = require('jsonwebtoken');
+const utils = require('./utils')
+
+
+// bcrypt configuration
+const bcrypt = require('bcrypt');
+const saltRounds = 10
 
 
 // body-parser configuration
@@ -15,6 +18,9 @@ router.use(bodyParser.urlencoded({     // to support URL-encoded bodies
     extended: true
 }));
 
+// multer configuration
+const multer = require('multer');
+const upload = multer();
 
 
 router.use((req, res, next)=>{
@@ -29,14 +35,15 @@ router.use((req, res, next)=>{
 
 // Create User
 
-router.post('/register', (req, res)=>{
+router.post('/register', upload.none(), (req, res)=>{
 
     const { username, email, password } = req.body; 
-
+    console.log(req.body)
     const newUser = new User({
         username: username,
         email: email,
-        password: bcrypt.hashSync(password, saltRounds) // Hashing 
+        password: bcrypt.hashSync(password, saltRounds), // Hashing
+        profileImage: utils.getProfilePicture(username)
     });
 
     newUser.save((err)=>{
@@ -65,11 +72,24 @@ router.post('/login', upload.none(), (req, res)=>{
 
     User.findOne({email: email}, (err, foundUser) =>{
         if(!err) {
-            if(foundUser && bcrypt.compare(password, foundUser.password)) {
-                res.send({
-                    status: 200,
-                    user: foundUser
+            if(foundUser && bcrypt.compareSync(password, foundUser.password)) {
+
+                jwt.sign(foundUser._doc, 'secretKey', (err, token)=>{
+
+
+                    if(!err){
+                        res.send({
+                            status: 200,
+                            token: token
+                        })
+                    } else {
+                        console.log(err)
+                        res.send(err)
+                    }
                 })
+
+
+               
             } else {
                 res.send({
                     status: 400,
@@ -84,6 +104,15 @@ router.post('/login', upload.none(), (req, res)=>{
         }
     })
 
+})
+
+// Get user data
+
+router.get('/', (req, res)=>{
+    const user =  utils.getUser(req.headers.authorization.split(" ")[1]);
+
+    res.send(user)
+  
 })
 
 module.exports = router;
