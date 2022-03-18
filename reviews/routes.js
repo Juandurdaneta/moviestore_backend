@@ -43,6 +43,20 @@ router.post('/', (req, res)=>{
 // get reviews on movie
 router.get('/:movieId', (req, res)=>{
 
+    Review.find({movieId: req.params.movieId}, (err, foundReviews)=>{
+        if(!err && foundReviews.length > 0){
+            res.send({
+                status: 200,
+                foundReviews: foundReviews
+            })
+        } else{
+            res.send({
+                status: 400,
+                message: "No reviews found for this movie"
+            })
+        }
+    })
+
 })
 
 // get reviews by user
