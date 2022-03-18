@@ -22,16 +22,6 @@ router.use(bodyParser.urlencoded({     // to support URL-encoded bodies
 const multer = require('multer');
 const upload = multer();
 
-
-router.use((req, res, next)=>{
-
-    res.header("Access-Control-Allow-Origin", "*");
-    res.header("Access-Control-Allow-Methods", "GET,HEAD,OPTIONS,POST,PUT");
-    res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, authorization");
-
-    next();
-})
-
 // Create User
 
 router.post('/register', upload.none(), (req, res)=>{
@@ -111,6 +101,32 @@ router.get('/', (req, res)=>{
 
     res.send(user)
   
+})
+
+// get user data by id
+
+router.get('/:userId', (req, res)=>{
+    
+    const userId = req.params.userId;
+
+    User.findOne({userId: userId}, (err, foundUser)=>{
+        if(!err && foundUser[0]){
+            res.send({
+                status: 200,
+                foundUser: {
+                    userId: foundUser.userId,
+                    username: foundUser.username,
+                    profileImage: foundUser.profileImage
+                }
+            })
+        } else {
+            res.send({
+                status: 400,
+                message: "User not found.. Please try again."
+            })
+        }
+    });
+
 })
 
 // Delete user
