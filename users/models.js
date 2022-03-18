@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
     profileImage : {
         type: String,
         required: true,
-        default: 'https://avatars.dicebear.com/api/bottts/default.svg'
+        default: 'https://avatars.dicebear.com/api/identicon/default.svg'
     }
 })
 

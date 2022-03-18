@@ -8,5 +8,5 @@ exports.getUser = function(token){
 }
 
 exports.getProfilePicture = function(username){
-    return `https://avatars.dicebear.com/api/bottts/${username}.svg`
+    return `https://avatars.dicebear.com/api/identicon/${username}.svg`
 }
