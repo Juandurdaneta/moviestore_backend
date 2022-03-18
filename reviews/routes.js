@@ -1,9 +1,6 @@
 const express = require('express');
 const router = express.Router();
 
-const jwt = require('jsonwebtoken');
-const utils = require('./utils')
-
 // Schemas
 const reviewSchema = require('./models.js')
 const Review = reviewSchema.getReview();
@@ -69,3 +66,4 @@ router.put('/:reviewId', (req, res)=>{
 
 })
 
+module.exports = router;
